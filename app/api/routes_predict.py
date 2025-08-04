@@ -1,16 +1,30 @@
 # app/api/routes_predict.py
 
+# Orquestra a chamada para predição e para a análise.
+# -------------------------------------------------------------------
 from fastapi import APIRouter, HTTPException
 from app.schemas.prediction import PredictionInput, PredictionOutput
-from app.core.predictor import carregar_modelo_e_predizer
+from app.core.predictor import get_expected_annual_return
+from app.core.gpt_summary import generate_ai_insights
 
 router = APIRouter()
 
-@router.post("/", response_model=PredictionOutput)
-def fazer_predicao(dados: PredictionInput):
-    retorno, mensagem = carregar_modelo_e_predizer(dados)
+@router.post("/predict", response_model=PredictionOutput)
+def predict_stock_return(data: PredictionInput):
+    ticker = data.ticker.upper()
+    
+    predicted_return, status, _ = get_expected_annual_return(ticker)
 
-    if retorno is None:
-        raise HTTPException(status_code=400, detail=mensagem)
+    if predicted_return is None:
+        raise HTTPException(status_code=404, detail=status)
 
-    return PredictionOutput(retorno_esperado=retorno, mensagem=mensagem)
+    # Chama a função que agora retorna apenas dois valores
+    analysis_text, outlook_value = generate_ai_insights(ticker, predicted_return)
+
+    return PredictionOutput(
+        ticker=ticker,
+        predicted_return=predicted_return,
+        status=status,
+        analysis=analysis_text,
+        long_term_outlook=outlook_value
+    )

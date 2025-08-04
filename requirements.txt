@@ -29,3 +29,6 @@ requests_cache==0.9.1
 
 # Para carregar variáveis de ambiente
 python-dotenv==1.0.1
+
+# openai
+openai==1.1.0

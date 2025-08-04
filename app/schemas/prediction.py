@@ -6,5 +6,8 @@ class PredictionInput(BaseModel):
     ticker: str
 
 class PredictionOutput(BaseModel):
-    retorno_esperado: float
-    mensagem: str
+    ticker: str
+    predicted_return: float | None = None
+    status: str
+    analysis: str | None = None
+    long_term_outlook: float | None = None
