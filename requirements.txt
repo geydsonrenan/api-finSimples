@@ -24,3 +24,8 @@ joblib==1.4.2
 # Para testes (se necessário futuramente)
 httpx==0.27.0
 pytest==8.2.2
+
+requests_cache==0.9.1
+
+# Para carregar variáveis de ambiente
+python-dotenv==1.0.1
