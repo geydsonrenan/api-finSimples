@@ -1,0 +1,26 @@
+# Web framework
+fastapi==0.111.0
+
+# ASGI server
+uvicorn[standard]==0.30.1
+
+# Modelagem e machine learning
+xgboost==2.0.3
+scikit-learn==1.7.1
+pandas==2.3.0
+numpy==2.3.0
+yfinance==0.2.40
+
+# Validação e parsing
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# Logging (opcional, mas recomendado)
+loguru==0.7.2
+
+# Para carregar modelos serializados com pickle (já vem com sklearn, mas garante)
+joblib==1.4.2
+
+# Para testes (se necessário futuramente)
+httpx==0.27.0
+pytest==8.2.2

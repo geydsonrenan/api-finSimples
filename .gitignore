@@ -1,0 +1,32 @@
+# Ambiente virtual
+venv/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Arquivos de log
+*.log
+
+# Arquivos de configuração do VSCode
+.vscode/
+
+# Arquivos de modelo e dados
+# *.pkl
+# *.json
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de ambiente
+.env
+.env.*
+
+# Arquivos de testes
+*.pytest_cache/
+
+# Outros
+*.swp
