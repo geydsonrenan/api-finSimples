@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class PredictionInput(BaseModel):
     ticker: str
-    year: int
+    years: int
 
 class PredictionOutput(BaseModel):
     ticker: str

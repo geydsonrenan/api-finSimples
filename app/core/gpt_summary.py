@@ -54,10 +54,13 @@ def generate_ai_insights(ticker: str, predicted_return: float, year: int) -> tup
     
     # --- PROMPT ATUALIZADO PARA SOLICITAR JSON SIMPLIFICADO ---
     prompt = f"""
-    Você é um analista financeiro para investidores iniciantes.
-    A ação é {ticker}, com previsão de retorno anual de {predicted_return:.2%}.
-    Indicadores:
-    {indicators_text}
+    Você é um analista financeiro cético e conservador, escrevendo para investidores iniciantes.
+    A ação em análise é a {ticker}.
+
+    DADOS DISPONÍVEIS:
+    1.  Previsão de Retorno Anual (modelo quantitativo): {predicted_return:.2%}
+    2.  Indicadores Financeiros Atuais:
+        {indicators_text}
 
     Sua resposta DEVE ser um objeto JSON válido com duas chaves: "analysis" e "five_year_return_percentage".
 
@@ -74,13 +77,44 @@ def generate_ai_insights(ticker: str, predicted_return: float, year: int) -> tup
         - [Ponto negativo 1]
         - [Ponto negativo 2]
 
-    2.  Para a chave "five_year_return_percentage", forneça UM ÚNICO NÚMERO (float) representando a rentabilidade total estimada em {year} anos (ex: 35.5 para 35.5%). Não use só a rentabilidade anual como métrica, considere também as características da empresa, como o tempo de atuação no mercado, indicadores e o setor de atuação.
+    2.  Para a chave "five_year_return_percentage", calcule uma projeção de retorno total para {year} anos.
+        Assuma o papel de um analista financeiro conservador.
+
+        **Objetivo:** Calcular a projeção de retorno total de uma ação em {year} anos, de forma realista e fundamentada.
+
+        **Dados de Entrada:**
+        * **Retorno Projetado (1 ano):** {predicted_return:.2%}
+
+        **Instruções de Cálculo:**
+        1.  Comece com o retorno projetado para 1 ano, mas **não o extrapole matematicamente** para {year} anos (Ex: não faça `retorno_1_ano * {year}`).
+        2.  Avalie a tendência de longo prazo do setor da empresa usando a tabela abaixo.
+        3.  Aplique um **fator de ajuste qualitativo** baseado na tendência do setor e em uma visão conservadora do mercado brasileiro. Ações com retornos anuais muito altos devem ser ajustadas para baixo, refletindo a dificuldade de manter tal performance. Ações com rentabilidade negativa não significam necessariamente rentabilidades negativas ao longo prazo. Tudo depende do setor.
+        4.  Com base nesta análise, estabeleça uma projeção de **retorno total acumulado** para os {year} anos.
+
+        **Tabela de Referência Setorial:**
+        * "Financeiro": "Estável com crescimento moderado"
+        * "Consumo": "Ligado à renda e confiança do consumidor"
+        * "Industrial": "Cíclico e dependente de investimentos"
+        * "Agropecuária": "Forte crescimento e vocação exportadora"
+        * "Saúde": "Crescimento sólido e defensivo"
+        * "Varejo": "Altamente competitivo e em transformação"
+        * "Energia": "Estável com forte viés de transição"
+        * "Tecnologia": "Alto crescimento e inovação constante"
+        * "Saneamento": "Estável com enorme potencial de crescimento"
+        * "Siderurgia/Metalurgia/Mineração": "Altamente cíclico e ligado a commodities"
+        * "Construção Civil/Imobiliário": "Altamente cíclico e sensível aos juros"
+        * "Papel e Celulose": "Forte vocação exportadora e competitiva"
+        * *(outros setores da sua lista)*
+
+        **Formato da Resposta:**
+        * Retorne **apenas o número final** da projeção de retorno total em {year} anos, como um valor de ponto flutuante (float).
+        * **Exemplo:** Se a projeção for de 45.8%, retorne `45.8`.
     """
 
     try:
         print("DEBUG: Enviando requisição para a OpenAI solicitando JSON...")
         completion = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4.1",
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": "Você é um analista financeiro que responde estritamente com objetos JSON."},

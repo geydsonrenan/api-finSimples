@@ -12,7 +12,7 @@ router = APIRouter()
 @router.post("/predict", response_model=PredictionOutput)
 def predict_stock_return(data: PredictionInput):
     ticker = data.ticker.upper()
-    year = data.year
+    year = data.years
     
     predicted_return, status, _ = get_expected_annual_return(ticker)
 
