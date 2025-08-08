@@ -35,11 +35,14 @@ def get_stock_indicators(ticker: str) -> dict | None:
         print(f"DEBUG: Erro ao buscar indicadores da Brapi: {e}")
         return None
 
-def generate_ai_insights(ticker: str, predicted_return: float) -> tuple[str | None, float | None]:
+def generate_ai_insights(ticker: str, predicted_return: float, year: int) -> tuple[str | None, float | None]:
     """
     Gera insights da OpenAI, solicitando uma resposta estruturada em JSON.
     Retorna (análise, projeção_5_anos).
     """
+    if year == 1:
+        year = 5
+
     if not client:
         return "Análise não disponível: Chave da API da OpenAI não configurada.", None
 
@@ -71,7 +74,7 @@ def generate_ai_insights(ticker: str, predicted_return: float) -> tuple[str | No
         - [Ponto negativo 1]
         - [Ponto negativo 2]
 
-    2.  Para a chave "five_year_return_percentage", forneça UM ÚNICO NÚMERO (float) representando a rentabilidade total estimada em 5 anos (ex: 35.5 para 35.5%). Não use só a rentabilidade anual como métrica, considere também as características da empresa, como o tempo de atuação no mercado, indicadores e o setor de atuação.
+    2.  Para a chave "five_year_return_percentage", forneça UM ÚNICO NÚMERO (float) representando a rentabilidade total estimada em {year} anos (ex: 35.5 para 35.5%). Não use só a rentabilidade anual como métrica, considere também as características da empresa, como o tempo de atuação no mercado, indicadores e o setor de atuação.
     """
 
     try:

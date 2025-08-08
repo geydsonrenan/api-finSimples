@@ -12,6 +12,7 @@ router = APIRouter()
 @router.post("/predict", response_model=PredictionOutput)
 def predict_stock_return(data: PredictionInput):
     ticker = data.ticker.upper()
+    year = data.year
     
     predicted_return, status, _ = get_expected_annual_return(ticker)
 
@@ -19,7 +20,7 @@ def predict_stock_return(data: PredictionInput):
         raise HTTPException(status_code=404, detail=status)
 
     # Chama a função que agora retorna apenas dois valores
-    analysis_text, outlook_value = generate_ai_insights(ticker, predicted_return)
+    analysis_text, outlook_value = generate_ai_insights(ticker, predicted_return, year)
 
     return PredictionOutput(
         ticker=ticker,
