@@ -34,3 +34,5 @@ python-dotenv==1.0.1
 openai==1.1.0
 
 gunicorn
+
+tokenizers==0.19.1
