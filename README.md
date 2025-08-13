@@ -50,21 +50,8 @@ pip install -r requirements.txt
 ### 2) Variáveis de ambiente
 
 ```env
-APP_ENV=dev
-LOG_LEVEL=INFO
-PORT=8000
-CORS_ORIGINS=http://localhost:3000
-
-# OpenAI (narrativa opcional)
+BRAPI_TOKEN=coloque_sua_chave_aqui
 OPENAI_API_KEY=coloque_sua_chave_aqui
-OPENAI_MODEL=gpt-4o-mini
-
-# Limites
-MIN_PERIOD_YEARS=1
-MAX_PERIOD_YEARS=5
-
-# (Opcional) Cache
-REDIS_URL=redis://localhost:6379/0
 ```
 
 ### 3) Subir a API
@@ -77,44 +64,6 @@ uvicorn app.main:app --reload --port 8000
 
 ## 🔌 Endpoints (MVP)
 
-### `GET /health`
-
-Healthcheck da API.
-
-**Resposta exemplo**
-
-```json
-{"status": "ok", "env": "dev"}
-```
-
----
-
-### `GET /assets/{ticker}/history?start=YYYY-MM-DD&end=YYYY-MM-DD`
-
-Retorna a série histórica (para o frontend plotar o gráfico).
-
-**Resposta exemplo**
-
-```json
-{
-  "ticker": "PETR4.SA",
-  "currency": "BRL",
-  "data": [
-    {
-      "date": "2025-07-29",
-      "open": 31.00,
-      "high": 31.80,
-      "low": 30.95,
-      "close": 31.45,
-      "volume": 12345678
-    }
-  ],
-  "source": "yfinance"
-}
-```
-
----
-
 ### `POST /predict`
 
 Projeção + intervalo simples; narrativa opcional via LLM.
@@ -124,8 +73,7 @@ Projeção + intervalo simples; narrativa opcional via LLM.
 ```json
 {
   "ticker": "PETR4.SA",
-  "period_years": 3,
-  "include_narrative": true
+  "years": 3
 }
 ```
 
@@ -133,23 +81,11 @@ Projeção + intervalo simples; narrativa opcional via LLM.
 
 ```json
 {
-  "ticker": "PETR4.SA",
-  "period_years": 3,
-  "as_of": "2025-08-13",
-  "projection_pct": 6.0,
-  "ci_low_pct": 1.5,
-  "ci_high_pct": 10.5,
-  "stats": {
-    "cagr": 0.082,
-    "volatility_annual": 0.24,
-    "mean_return_annual": 0.08
-  },
-  "risk_bullets": [
-    "Volatilidade ligada ao preço do petróleo",
-    "Impacto de câmbio e decisões da OPEP"
-  ],
-  "narrative": "Texto claro sobre empresa e setor (sem jargões/sem call de compra ou venda).",
-  "disclaimer": "Projeções baseadas em dados históricos; não garantem resultados."
+    "ticker": "PETR4",
+    "predicted_return": 0.1585988998413086,
+    "status": "Previsão realizada com sucesso",
+    "analysis": "### Análise da Ação: PETR4 - Petrobras\n**Contexto sobre a empresa**\nA Petrobras é a maior empresa de petróleo e gás do Brasil, atuando no setor de energia há mais de 60 anos. Ela é responsável por grande parte da produção, refino e distribuição de combustíveis fósseis no país, sendo uma das líderes do setor na América Latina.\n**Explicação do Resultado:**\nO indicador P/L em torno de 8,6 sugere que a ação está sendo negociada a múltiplos razoáveis em relação ao seu lucro, o que pode indicar uma certa atratividade de preço. A previsão de retorno anual de 15,86% é elevada, mas é importante destacar que o setor de energia, especialmente petróleo, é exposto a volatilidade de preços internacionais e riscos políticos no Brasil. Como analista conservador, considero difícil manter retornos tão altos de forma sustentável, especialmente em um setor tradicionalmente estável, mas sujeito a ciclos econômicos e mudanças regulatórias. Portanto, a projeção deve ser ajustada para refletir um cenário mais realista ao longo de cinco anos.\n**Prós de Investir:**\n- Forte presença de mercado e liderança no setor de energia.\n- Potencial de bons dividendos devido à lucratividade da empresa.\n**Contras de Investir:**\n- Alta exposição a riscos regulatórios e políticos no Brasil.\n- Forte dependência de preços internacionais do petróleo, que são voláteis.",
+    "long_term_outlook": 55.0
 }
 ```
 
@@ -158,16 +94,6 @@ Projeção + intervalo simples; narrativa opcional via LLM.
 * `400` — ticker/período inválido
 * `422` — payload inválido (Pydantic)
 * `500` — erro interno
-
----
-
-## 🛡️ Validação, Segurança e LGPD
-
-* **Ticker**: whitelist/regex `^[A-Za-z0-9.\-]{1,12}$` + normalização
-* **Período**: inteiro `1..5`
-* **Prompt-safety (LLM)**: narrativa neutra e sem recomendações
-* **LGPD**: sem PII; logs anonimizados e expurgo ≤ 7 dias
-* **CORS**: restrito a origens confiáveis (`CORS_ORIGINS`)
 
 ---
 
@@ -226,24 +152,6 @@ services:
 ```bash
 pytest -q
 ```
-
----
-
-## 📈 Observabilidade
-
-* Logs estruturados (JSON)
-* Sentry para exceções
-* Datadog/Grafana: p95, throughput, error rate
-* Alertas: p95 > 2 s, error rate > 1%
-
----
-
-## 🔜 Roadmap (curto prazo)
-
-* Cache agressivo e paralelismo de I/O
-* API para parceiros (auth por chave, rate limit)
-* Alertas de volatilidade (jobs)
-* PDF (pago): mini-relatório (não implementado)
 
 ---
 
