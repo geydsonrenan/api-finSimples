@@ -248,10 +248,3 @@ pytest -q
 2. Crie um branch `feature/nome`
 3. Envie PR com descrição e testes
 4. CI: lint + testes
-
----
-
-## 📄 Licença
-
-Defina a licença (ex.: MIT) e adicione o arquivo `LICENSE` na raiz.
-
