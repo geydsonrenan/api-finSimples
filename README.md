@@ -3,27 +3,31 @@
 API do **FinSimples** para projetar o **retorno percentual** de ativos da **B3** em **1–5 anos** e gerar **contexto em linguagem simples** (empresa/setor/alertas) com ChatGPT.
 
 > **Status do MVP**
-> - TTV atual ≈ **60 s** (com cache a meta é ≤ **15 s**)
-> - Período aceito: **1–5 anos**
-> - **PDF**: apenas nas versões pagas (**não implementado** no MVP)
+>
+> * TTV atual ≈ **60 s** (com cache a meta é ≤ **3 s**)
+> * Período aceito: **1–5 anos**
+> * **PDF**: apenas nas versões pagas (**não implementado** no MVP)
 
 ---
 
 ## 🔧 Stack
-- **Python 3.10+**, **FastAPI**, **Uvicorn**
-- **pandas / numpy / scikit-learn** (projeção estatística/ML)
-- **yfinance** (dados históricos)
-- **OpenAI API** (narrativa opcional – empresa e setor)
-- (Opcional) **Redis** para cache
-- Deploy/observabilidade: **bravi.dev** (ou similar)
+
+* **Python 3.10+**, **FastAPI**, **Uvicorn**
+* **pandas / numpy / scikit-learn** (projeção estatística/ML)
+* **yfinance** (dados históricos)
+* **OpenAI API** (narrativa opcional – empresa e setor)
+* (Opcional) **Redis** para cache
+* Deploy/observabilidade: **bravi.dev** (ou similar)
 
 ---
 
 ## 📁 Estrutura (simplificada)
-O código-fonte fica dentro de **`app/`** (entrada da API).  
+
+O código-fonte fica dentro de **`app/`** (entrada da API).
 Há **`requirements.txt`** e **`Procfile`** na raiz para execução/deploy.
 
 > **Execução no Procfile**
+>
 > ```bash
 > web: gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app
 > ```
@@ -33,6 +37,7 @@ Há **`requirements.txt`** e **`Procfile`** na raiz para execução/deploy.
 ## ▶️ Como rodar localmente
 
 ### 1) Clonar e instalar
+
 ```bash
 git clone https://github.com/geydsonrenan/api-finSimples.git
 cd api-finSimples
@@ -40,7 +45,7 @@ cd api-finSimples
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-````
+```
 
 ### 2) Variáveis de ambiente
 
@@ -171,7 +176,7 @@ Projeção + intervalo simples; narrativa opcional via LLM.
 * Cache de séries do `yfinance` e respostas do LLM (se Redis disponível)
 * TTL curto (5–15 min) para dados recentes
 * Meta de latência: ≤ 2 s (p95)
-* Objetivo TTV: ≤ 15 s após otimizações
+* Objetivo TTV: ≤ 3 s após otimizações
 
 ---
 
@@ -248,3 +253,4 @@ pytest -q
 2. Crie um branch `feature/nome`
 3. Envie PR com descrição e testes
 4. CI: lint + testes
+
