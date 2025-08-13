@@ -6,7 +6,8 @@ API do **FinSimples** para projetar o **retorno percentual** de ativos da **B3**
 >
 > * TTV atual ≈ **60 s** (com cache a meta é ≤ **3 s**)
 > * Período aceito: **1–5 anos**
-> * **PDF**: apenas nas versões pagas (**não implementado** no MVP)
+
+Link do deploy: [https://api-finsimples.onrender.com](deploy)
 
 ---
 
